@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>دليل مواد علم الحاسوب | CS Hub</title>
+  
+  <!-- خط تجوال العربي -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  
+  <!-- ملف الأنماط والتنسيقات -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==============================================
+       القسم الرئيسي (Hero Header) - ليلة النجوم الفلكية
+       ============================================== -->
+  <header class="hero">
+    <div class="space">
+      <!-- طبقات الكانفاس للرسم التفاعلي والنجوم المتحركة -->
+      <canvas id="sky"></canvas>
+      <canvas id="sk"></canvas>
+
+      <!-- القمر المتوهج والتأثيرات السماوية (مستوحى من لوحة ليلة النجوم) -->
+      <i class="cmg"></i>
+      <i class="cm"></i>
+
+      <!-- دوامات النجوم المتلألئة بأحجام ومواقع مختلفة -->
+      <i class="vs" style="--l:6%;--t:90px;--s:96px;--k:14"></i>
+      <i class="vs" style="--l:19%;--t:215px;--s:70px;--d:-1s;--k:24"></i>
+      <i class="vs" style="--l:31%;--t:55px;--s:62px;--d:-2s;--k:30"></i>
+      <i class="vs" style="--l:70%;--t:185px;--s:84px;--d:-.6s;--k:20"></i>
+      <i class="vs" style="--l:86%;--t:250px;--s:100px;--d:-1.7s;--k:12"></i>
+      <i class="vs" style="--l:62%;--t:40px;--s:58px;--d:-2.4s;--k:34"></i>
+
+      <!-- شجرة السرو الظلية (Cypress Tree Silhouette) -->
+      <svg class="cy" viewBox="0 0 100 300" preserveAspectRatio="xMidYMax meet">
+        <path d="M50 0C58 40 70 70 62 110C80 130 76 170 68 200C88 220 84 260 70 300H30C18 260 14 220 34 200C24 170 20 130 38 110C30 70 42 40 50 0Z" fill="#06150f"/>
+        <path d="M50 22C62 62 40 92 56 132M44 142C60 172 40 202 54 242" stroke="#1f4a3c" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/>
+      </svg>
+
+      <!-- القرية والبيوت ذات النوافذ المضيئة (Village Skyline) -->
+      <svg class="vil" viewBox="0 0 1200 120" preserveAspectRatio="xMidYMax slice">
+        <path d="M0 120V84Q160 52 330 80T700 76T1000 84T1200 72V120Z" fill="#0a1230"/>
+        <g fill="#0c1536">
+          <path d="M90 120V88l20-16 20 16v32z"/>
+          <path d="M190 120V92l16-14 16 14v28z"/>
+          <path d="M300 120V84l22-18 22 18v36z"/>
+          <path d="M430 120V90l18-15 18 15v30z"/>
+          <path d="M610 120V74h24V38l9-26 9 26v36h24v46z"/>
+          <path d="M780 120V90l20-16 20 16v30z"/>
+          <path d="M900 120V86l18-16 18 16v34z"/>
+          <path d="M1030 120V92l16-14 16 14v28z"/>
+        </g>
+        <!-- نوافذ مضيئة تومض في القرية -->
+        <g>
+          <rect class="wn" x="104" y="98" width="6" height="9"/>
+          <rect class="wn" x="206" y="100" width="5" height="8"/>
+          <rect class="wn" x="316" y="94" width="6" height="9"/>
+          <rect class="wn" x="440" y="98" width="5" height="8"/>
+          <rect class="wn" x="640" y="84" width="6" height="10"/>
+          <rect class="wn" x="796" y="98" width="6" height="9"/>
+          <rect class="wn" x="912" y="96" width="5" height="9"/>
+          <rect class="wn" x="1042" y="100" width="5" height="8"/>
+        </g>
+      </svg>
+
+      <!-- تعريفات فلاتر SVG الرسومية للقمر والتفاصيل -->
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <defs>
+          <radialGradient id="mb" cx=".35" cy=".3" r=".85">
+            <stop offset="0" stop-color="#fdfdf6"/>
+            <stop offset=".55" stop-color="#d8d8cf"/>
+            <stop offset="1" stop-color="#8f8f89"/>
+          </radialGradient>
+          <radialGradient id="ms" cx=".32" cy=".3" r=".9">
+            <stop offset=".5" stop-color="#000" stop-opacity="0"/>
+            <stop offset="1" stop-color="#05061a" stop-opacity=".78"/>
+          </radialGradient>
+          <filter id="mt">
+            <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="5" seed="11"/>
+            <feColorMatrix values="0 0 0 0 .3 0 0 0 0 .3 0 0 0 0 .34 0 0 0 1.5 -.5"/>
+          </filter>
+          <filter id="mbl">
+            <feGaussianBlur stdDeviation="4"/>
+          </filter>
+          <clipPath id="mc">
+            <circle cx="100" cy="100" r="99"/>
+          </clipPath>
+          <g id="mn" clip-path="url(#mc)">
+            <circle cx="100" cy="100" r="99" fill="url(#mb)"/>
+            <g filter="url(#mbl)" fill="#6c6d76" opacity=".5">
+              <ellipse cx="68" cy="72" rx="28" ry="21"/>
+              <ellipse cx="110" cy="60" rx="21" ry="17"/>
+              <ellipse cx="86" cy="112" rx="25" ry="22"/>
+              <ellipse cx="130" cy="100" rx="15" ry="13"/>
+              <ellipse cx="58" cy="116" rx="12" ry="15"/>
+              <ellipse cx="120" cy="140" rx="18" ry="12"/>
+            </g>
+            <rect width="200" height="200" filter="url(#mt)" opacity=".5"/>
+            <g fill="#8d8d90" fill-opacity=".45" stroke="#fff" stroke-opacity=".4" stroke-width="1.2">
+              <circle cx="150" cy="60" r="12"/>
+              <circle cx="44" cy="150" r="9"/>
+              <circle cx="140" cy="150" r="14"/>
+              <circle cx="100" cy="30" r="7"/>
+              <circle cx="170" cy="105" r="8"/>
+              <circle cx="78" cy="168" r="6"/>
+              <circle cx="30" cy="85" r="7"/>
+            </g>
+            <circle cx="100" cy="100" r="99" fill="url(#ms)"/>
+          </g>
+        </defs>
+      </svg>
+
+      <!-- الحاسوب المحمول ثلاثي الأبعاد التفاعلي (Interactive 3D Laptop) -->
+      <div class="pc" id="pc" title="اضغط لتشغيل خوارزمية جديدة!">
+        <div class="halo"></div>
+        <div class="pc3d">
+          <div class="lid">
+            <i class="cam"></i>
+            <div class="scr">
+              <div class="tb">
+                <i></i><i></i><i></i>
+                <span>main.py — CS Hub</span>
+              </div>
+              <div class="code" id="code"></div>
+              <div class="pout" id="pout"></div>
+            </div>
+          </div>
+          <div class="base"></div>
+        </div>
+        <!-- رموز وشعارات برمجية طافية حول الشاشة -->
+        <span class="fl" style="--x:-17.5em;--y:1em;--k:36;--c:#5eead4">&lt;/&gt;</span>
+        <span class="fl" style="--x:-19em;--y:7em;--k:22;--c:#8fb4ff;--d:-1.5s">01</span>
+        <span class="fl" style="--x:-16em;--y:12.5em;--k:46;--c:#ffd37a;--d:-3s">#</span>
+        <span class="fl" style="--x:13.5em;--y:2em;--k:40;--c:#ff7ad9;--d:-.8s">{ }</span>
+        <span class="fl" style="--x:15.5em;--y:8em;--k:24;--c:#b8a8ff;--d:-2.2s">λ</span>
+        <span class="fl" style="--x:13em;--y:13em;--k:50;--c:#4ade80;--d:-3.6s">Σ</span>
+      </div>
+
+      <!-- شهاب عابر متحرك -->
+      <i class="shoot"></i>
+    </div>
+
+    <!-- نصوص وعناصر الهيدر العليا -->
+    <div class="wrap">
+      <div class="top">
+        <div class="logo">💻 CS Hub</div>
+        <!-- زر التبديل بين الوضع الليلي والنهاري بتأثير حركي -->
+        <button class="theme tgl" id="theme" aria-label="تبديل الوضع (داكن / فاتح)" title="تبديل المظهر">
+          <span class="tk"><b class="mo">🌙</b><b class="su">☀️</b></span>
+        </button>
+      </div>
+
+      <h1>دليلك الكامل لمواد<br>تخصص علم الحاسوب</h1>
+      <p>تصفّح المواد مرتبة حسب المجال، واقرأ التفاصيل، وأضف مصادرك وتعليقاتك وملاحظاتك على كل مادة.</p>
+
+      <!-- عدادات الإحصائيات الحية التفاعلية -->
+      <div class="stats">
+        <div class="stat">
+          <b id="s1">0</b>
+          <span>مادة</span>
+        </div>
+        <div class="stat">
+          <b id="s2">0</b>
+          <span>مصدر</span>
+        </div>
+        <div class="stat">
+          <b id="s3">0</b>
+          <span>تعليق</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==============================================
+       المحتوى الرئيسي: شريط البحث، الفلاتر، وشبكة المواد
+       ============================================== -->
+  <main>
+    <div class="bar">
+      <!-- مربع البحث بتوهج ديناميكي وتلميح كتابي متحرك -->
+      <div class="sbox" id="sbox">
+        <div class="sg"></div>
+        <div class="sin">
+          <span class="si" aria-hidden="true">🔭</span>
+          <div class="sw">
+            <input class="search" id="q" autocomplete="off" placeholder=" " aria-label="بحث في المواد">
+            <span class="ph" id="ph"></span>
+          </div>
+          <kbd title="اختصار لوحة المفاتيح">/</kbd>
+          <button class="sx" id="sx" aria-label="مسح البحث">✕</button>
+          <span class="cnt" id="cnt"></span>
+        </div>
+      </div>
+
+      <!-- شرائح تصفية المجالات والتصنيفات (Chips Filter) -->
+      <div class="chips" id="chips"></div>
+
+      <!-- زر فتح نافذة إضافة مادة جديدة -->
+      <button class="btn" id="add">＋ مادة جديدة</button>
+    </div>
+
+    <!-- وسوم الاقتراحات السريعة للبحث -->
+    <div class="sug" id="sug"></div>
+
+    <!-- شبكة عرض بطاقات المواد الدراسية -->
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <!-- التذييل -->
+  <footer>تُحفظ إضافاتك على هذا المتصفح فقط · CS Hub</footer>
+
+  <!-- ==============================================
+       النافذة المنبثقة: تفاصيل المادة (تبويبات ومصادر ورسم)
+       ============================================== -->
+  <dialog id="dlg">
+    <div class="dh">
+      <div>
+        <h2 id="dt"></h2>
+        <div class="en" id="den"></div>
+      </div>
+      <button class="x" id="dx" aria-label="إغلاق النافذة">✕</button>
+    </div>
+    
+    <!-- شريط التبويبات الداخلية -->
+    <div class="tabs" id="tabs"></div>
+    
+    <!-- جسم التبويب النشط -->
+    <div class="db" id="body"></div>
+  </dialog>
+
+  <!-- ==============================================
+       النافذة المنبثقة: نموذج إضافة مادة جديدة
+       ============================================== -->
+  <dialog id="nd">
+    <div class="dh">
+      <h2>إضافة مادة جديدة</h2>
+      <button class="x" id="nx" aria-label="إغلاق النافذة">✕</button>
+    </div>
+    <div class="db">
+      <label for="n1">اسم المادة بالعربية</label>
+      <input id="n1" placeholder="مثال: هندسة البرمجيات">
+
+      <label for="n2">الاسم بالإنجليزي</label>
+      <input id="n2" dir="ltr" placeholder="مثال: Software Engineering">
+
+      <label for="n3">المجال / التخصص</label>
+      <select id="n3"></select>
+
+      <label for="n4">السنة الدراسية</label>
+      <select id="n4">
+        <option value="الأولى">السنة الأولى</option>
+        <option value="الثانية">السنة الثانية</option>
+        <option value="الثالثة">السنة الثالثة</option>
+        <option value="الرابعة">السنة الرابعة</option>
+      </select>
+
+      <label for="n7">طريقة فهمها بالرسم</label>
+      <select id="n7">
+        <option value="tree">شجرة بيانات (Tree)</option>
+        <option value="net">شبكة / رسم بياني (Graph / Network)</option>
+        <option value="flow">مخطط انسيابي (Flowchart)</option>
+        <option value="classes">أصناف وكائنات (OOP Classes)</option>
+        <option value="sort">أعمدة وترتيب (Sorting Bars)</option>
+        <option value="layers">طبقات وهيكلية (Architecture Layers)</option>
+        <option value="table">جدول بيانات (Database Table)</option>
+        <option value="nn">شبكة عصبية (Neural Network)</option>
+      </select>
+
+      <label for="n5">الوصف التعريفي</label>
+      <textarea id="n5" rows="3" placeholder="نبذة توضيحية عن أهمية المادة وما يتعلمه الطالب فيها..."></textarea>
+
+      <label for="n6">المواضيع الأساسية (افصل بينها بفاصلة)</label>
+      <input id="n6" placeholder="مثال: تحليل المتطلبات, أنماط التصميم, دورة حياة البرمجيات">
+
+      <div style="margin-top:20px; display:flex; gap:10px; justify-content:flex-end">
+        <button class="btn" id="nsave">حفظ المادة</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ملف التحكم والمنطق الكامل للجافا سكريبت -->
+  <script src="script.js"></script>
+</body>
+</html>
